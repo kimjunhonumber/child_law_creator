@@ -1,4 +1,6 @@
 import streamlit as st
+from PIL import Image
+
 
 # 홈 페이지의 타이틀 설정
 st.title('🛠 도덕 도구 모음')
@@ -16,6 +18,11 @@ with col1:
     st.subheader('1. 생각 톡톡 AI')
     st.write('이 도구를 사용하면, 여러분이 배워야 할 도덕적 덕목에 대해서 잘 알 수 있습니다.')
     st.write('이렇게 질문하세요. 예) 정의로운 삶은 뜻은?')
+    
+    # 이미지 삽입
+    image_path = 'https://t1.daumcdn.net/thumb/R720x0/?fname=http://t1.daumcdn.net/brunch/service/user/xSO/image/LlSElL_exe7lc0mLeGSxBr4EZjg.png'  # 로컬 파일 경로 또는 URL
+    st.image(image_path, caption='도덕 교육 이미지')  # 이미지에 설명 추가
+
 
 
 with col2:
