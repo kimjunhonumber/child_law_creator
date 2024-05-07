@@ -13,8 +13,10 @@ st.markdown("""
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader('1. 제안서 생성 보조도구')
-    st.write('이 도구를 사용하면, 제안서를 쉽고 빠르게 작성할 수 있습니다.')
+    st.subheader('1. 생각 톡톡 AI')
+    st.write('이 도구를 사용하면, 여러분이 배워야 할 도덕적 덕목에 대해서 잘 알 수 있습니다.')
+    st.write('이렇게 질문하세요. 예) 정의로운 삶은 뜻은?')
+
 
 with col2:
     st.subheader('2. 발표문 생성 보조도구')
