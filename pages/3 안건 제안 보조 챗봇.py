@@ -3,15 +3,7 @@ import streamlit as st
 import time
 import random
 
-# secrets.toml에 저장된 API 키들을 리스트로 준비
-api_keys = [
-    st.secrets["api_key1"],
-    st.secrets["api_key2"],
-    st.secrets["api_key3"],
-    st.secrets["api_key4"],
-    st.secrets["api_key5"],
-    st.secrets["api_key6"]
-]
+
 
 # 세션 상태에서 현재 API 키를 관리
 if 'api_key' not in st.session_state:
