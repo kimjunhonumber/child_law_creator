@@ -8,9 +8,9 @@ import random
 # 세션 상태에서 현재 API 키를 관리
 if 'api_key' not in st.session_state:
     # API 키를 랜덤하게 선택하여 세션 상태에 저장
-    st.session_state.api_key = random.choice(api_keys)
+    st.session_state.api_key = "sk-proj-G1OWVaqnCwDWOxMUDWrDT3BlbkFJVUVAFXRDz0dq4zuVTEYR"
 
-client = OpenAI(api_key=st.session_state.api_key)
+client = OpenAI(api_key=sk-proj-G1OWVaqnCwDWOxMUDWrDT3BlbkFJVUVAFXRDz0dq4zuVTEYR)
 
 
 # 업데이트된 Assistant ID
