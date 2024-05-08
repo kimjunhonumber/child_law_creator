@@ -26,9 +26,6 @@ with col1:
     link_url = 'https://www.naver.com/'  # 이미지를 클릭했을 때 이동할 링크
     st.markdown(f'<a href="{link_url}" target="_blank"><img src="{image_path}" alt="도덕 교육 이미지" style="width:100%;"></a>', unsafe_allow_html=True)
 
-
-
-
 with col2:
     st.subheader('2. 발표문 생성 보조도구')
     st.write('발표 준비에 도움이 필요하신가요? 이 도구가 도와드립니다.')
