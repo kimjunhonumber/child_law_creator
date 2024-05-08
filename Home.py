@@ -22,6 +22,10 @@ with col1:
     # 이미지 삽입
     image_path = 'https://t1.daumcdn.net/thumb/R720x0/?fname=http://t1.daumcdn.net/brunch/service/user/xSO/image/LlSElL_exe7lc0mLeGSxBr4EZjg.png'  # 로컬 파일 경로 또는 URL
     st.image(image_path, caption='도덕 교육 이미지')  # 이미지에 설명 추가
+    
+    link_url = 'https://www.naver.com/'  # 이미지를 클릭했을 때 이동할 링크
+    st.markdown(f'<a href="{link_url}" target="_blank"><img src="{image_path}" alt="도덕 교육 이미지" style="width:100%;"></a>', unsafe_allow_html=True)
+
 
 
 
