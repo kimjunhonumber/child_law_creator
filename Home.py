@@ -19,7 +19,7 @@ with col1:
     # 이미지에 하이퍼링크 추가
     st.markdown("""
         <a href="https://childlawcreator-qfu1xsx5rw.streamlit.app/%EB%A7%88%EC%9D%8CAI">
-            <img src="https://postfiles.pstatic.net/MjAyNDA1MTNfMjQz/MDAxNzE1NTM5ODc2OTY3.8AWJDUJhCOJe2ycZlMbIUy2tm38ZKIhOywDeYMHcMDMg.Robn_xaq42P3a3iLkvXvS_EaUP_tFJr2OMEawP1hA7gg.JPEG/DALL%C2%B7E_2024-05-13_03.50.30_-_A_colorful_illustration_showing_a_group_of_dive.jpg?type=w773" width="100" height="100" alt="제안서 도구 이미지">
+            <img src="https://lh3.googleusercontent.com/proxy/UIggDZZrawXmiJPUmYyE-kMGFVEhWTLgIJwi58SOZSuP76LydbfSzGhVHDvcg4iuxAhL_1mtM7-voTXABICKwjPZmvSDoN_lM2_qi6R_GNo3szzC-ezWjA" width="50" height="50" alt="제안서 도구 이미지">
         </a>
     """, unsafe_allow_html=True)
 
