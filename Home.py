@@ -1,20 +1,24 @@
 import streamlit as st
 
 # 홈 페이지의 타이틀 설정
-st.title('🛠 자치활동 보조 인공지능도구 모음 홈페이지')
+st.title('🛠 AI인공지능 도구 모음 홈페이지')
 
 # 애플리케이션 소개
 st.markdown("""
     ## 🌟 안녕하세요!
-    이 애플리케이션은 학생 자치활동에 필요한 여러 가지 유용한 도구들로 구성되어 있습니다. 아래는 제작된 도구들의 리스트와 기능 설명입니다.
+    이 애플리케이션은 학생들의 도덕 학습을 위해 제작된 챗봇입니다. 아래는 제작된 도구들의 리스트와 기능 설명입니다.
 """)
 
 # 컬럼으로 레이아웃 구성
 col1, col2 = st.columns(2)
 
 with col1:
+    # 링크가 포함된 서브헤더와 이미지
     st.markdown('### [1. 제안서 생성 보조도구](https://childlawcreator-qfu1xsx5rw.streamlit.app/%EB%A7%88%EC%9D%8CAI)')
     st.write('이 도구를 사용하면, 제안서를 쉽고 빠르게 작성할 수 있습니다.')
+    # 이미지에 하이퍼링크 추가
+    st.markdown('[![제안서 도구 이미지](https://postfiles.pstatic.net/MjAyNDA1MTNfMjQz/MDAxNzE1NTM5ODc2OTY3.8AWJDUJhCOJe2ycZlMbIUy2tm38ZKIhOywDeYMHcMDMg.Robn_xaq42P3a3iLkvXvS_EaUP_tFJr2OMEawP1hA7gg.JPEG/DALL%C2%B7E_2024-05-13_03.50.30_-_A_colorful_illustration_showing_a_group_of_dive.jpg?type=w773)](https://childlawcreator-qfu1xsx5rw.streamlit.app/%EB%A7%88%EC%9D%8CAI)')
+
 
 with col2:
     st.subheader('2. 발표문 생성 보조도구')
