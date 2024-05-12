@@ -4,6 +4,8 @@ import time
 import random
 import os
 
+st.set_page_config(page_title="마음AI", page_icon="💓")
+st.title("❤‍🔥마음AI")
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
@@ -33,8 +35,7 @@ with st.sidebar:
 
 # 스레드 ID 입력란을 자동으로 업데이트
 thread_id = st.text_input("Thread ID", value=st.session_state.thread_id)
-st.set_page_config(page_title="마음AI", page_icon="💓")
-st.title("❤‍🔥마음AI")
+
 if "messages" not in st.session_state:
     st.session_state["messages"] = [{"role": "assistant", "content": "안녕하세요, 저는 안건 제안 보조 챗봇입니다. 먼저 왼쪽의 'Thread 생성'버튼을 눌러주세요. 무엇을 도와드릴까요?"}]
 
