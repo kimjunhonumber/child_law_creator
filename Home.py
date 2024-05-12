@@ -23,6 +23,9 @@ with col3:
     st.subheader('2. 생각AI')
     st.write('도덕적 생각을 하는 AI봇입니다.')
     st.write('도덕적 생각을 하는 AI봇입니다.')
+    image_path = 'https://postfiles.pstatic.net/MjAyNDA1MTNfMjQz/MDAxNzE1NTM5ODc2OTY3.8AWJDUJhCOJe2ycZlMbIUy2tm38ZKIhOywDeYMHcMDMg.Robn_xaq42P3a3iLkvXvS_EaUP_tFJr2OMEawP1hA7gg.JPEG/DALL%C2%B7E_2024-05-13_03.50.30_-_A_colorful_illustration_showing_a_group_of_dive.jpg?type=w773'
+    st.image(image_path, caption='도덕 교육 이미지')  # 이미지에 설명 추가 
+
 with col4:
     st.subheader('3. 실천AI')
     st.write('실천을 하는 AI봇입니다.')
