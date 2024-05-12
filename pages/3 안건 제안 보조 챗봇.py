@@ -1,101 +1,101 @@
-import streamlit as st
-from utils import print_messages, StreamingHandler
-from langchain_core.messages import ChatMessage
+from openai import OpenAI
+from langchain_core.callbacks.base import BaseCallbackHandler
 from langchain_openai import ChatOpenAI
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_community.chat_message_histories import ChatMessageHistory
-from langchain_core.chat_history import BaseChatMessageHistory
-from langchain_core.runnables.history import RunnableWithMessageHistory
+import streamlit as st
+import time
 import os
 
+# Define the StreamingHandler class before using it
+class StreamingHandler(BaseCallbackHandler):
+    def __init__(self, container, initial_text="", **kwargs) -> None:
+        self.container = container
+        self.text = initial_text
+   
+    def on_llm_new_token(self, token: str, **kwargs) -> None:
+        self.text += token
+        self.container.markdown(self.text)
 
-st.set_page_config(page_title="ChatGpt", page_icon="🚀")
-st.title("🚀ChatGPT")
-
-# API KEY 설정
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
-llm = ChatOpenAI(assistant_id="asst_5SiKVdqD5bk8Y0K6SivNqmg5")
+client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
 
+# st.set_page_config(page_title="마음AI", page_icon="💓")
+# st.title("❤‍🔥마음AI")
+st.set_page_config(page_title="실천AI", page_icon="🏳‍🌈")
+st.title("🏳‍🌈실천AI")
+# Creating an instance of StreamingHandler
+stream_handler = StreamingHandler(container=st, initial_text="")
+
+# Adding StreamingHandler to ChatOpenAI instance
+llm = ChatOpenAI(model="gpt-4-turbo", callbacks=[stream_handler])
+
+# Updated Assistant ID
+assistant_id = "asst_5SiKVdqD5bk8Y0K6SivNqmg5"
+
+with st.sidebar:
+    # Manage Thread ID
+    if "thread_id" not in st.session_state:
+        st.session_state.thread_id = ""
+
+    thread_btn = st.button("Thread 생성")
+
+    if thread_btn:
+        thread = client.beta.threads.create()
+        st.session_state.thread_id = thread.id  # Save Thread ID in session_state
+        st.subheader(f"Created Thread ID: {st.session_state.thread_id}")
+        st.info("스레드가 생성되었습니다.")
+        st.info("스레드 ID를 기억하면 대화내용을 이어갈 수 있습니다.")
+        st.divider()
+        st.subheader("추천 질문")
+        st.info("도덕 덕목에 대해 설명해줘")
+        st.info("내가 가지고 있는 고민을 해결해줘")
+        st.info("어떤 선택이 좋은 선택일까?")
+        st.info("친구의 마음을 이해하는 방법은?")
+
+# Automatic update of the Thread ID field
+thread_id = st.text_input("Thread ID", value=st.session_state.thread_id)
 
 
 if "messages" not in st.session_state:
-    st.session_state["messages"] = []
-#이전 대화기록을 출력해 주슨 코드
+    st.session_state["messages"] = [{"role": "assistant", "content": "안녕하세요, 저는 마음AI 챗봇입니다. 먼저 왼쪽의 'Thread 생성'버튼을 눌러주세요. 무엇을 도와드릴까요?"}]
+for msg in st.session_state.messages:
+    st.chat_message("role", avatar="🦄").write(msg["content"])
 
-#채팅 대화기록을 저정하는 store
-if "store" not in st.session_state:
-    st.session_state["store"] = dict()
+if prompt := st.chat_input():
+    if not thread_id:
+        st.error("Please add your thread_id to continue.")
+        st.stop()
 
-with st.sidebar:
-   session_id = st.text_input("Session ID",  value="abc123")    
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    st.chat_message("user", avatar="🐳").write(prompt)
 
-   clear_btn = st.button("대화기록초기화")
-   if clear_btn:
-       st.session_state["message"] = []
-       st.experimental_rerun()
+    response = client.beta.threads.messages.create(
+        thread_id,
+        role="user",
+        content=prompt,
+    )
 
-print_messages()
-
-store = {}  # 세션 기록을 저장할 딕셔너리
-
-
-# 세션 ID를 기반으로 세션 기록을 가져오는 함수
-def get_session_history(session_ids: str) -> BaseChatMessageHistory:
-    if session_ids not in st.session_state["store"]:  # 세션 ID가 store에 없는 경우
-        # 새로운 ChatMessageHistory 객체를 생성하여 store에 저장
-        st.session_state["store"][session_ids] = ChatMessageHistory()
-    return st.session_state["store"][session_ids]  # 해당 세션 ID에 대한 세션 기록 반환
+    run = client.beta.threads.runs.create(
+        thread_id=thread_id,
+        assistant_id=assistant_id
+    )
 
 
-if user_input := st.chat_input("메시지를 입력해 주세요."):
-    #사용자가 입력한 내용
-    st.chat_message("user").write(f"{user_input}")
-    #st.session_state["messages"].append(("user", user_input))
-    st.session_state["messages"].append(ChatMessage(role="user", content=user_input))
+    run_id = run.id
 
+    while True:
+        run = client.beta.threads.runs.retrieve(
+            thread_id=thread_id,
+            run_id=run_id
+        )
+        if run.status == "completed":
+            break
+        else:
+            time.sleep(2)
 
-    #LLM을 사용하여 AI의 답변을 생성
+    thread_messages = client.beta.threads.messages.list(thread_id)
 
-        #1번. 모델생성 
+    msg = thread_messages.data[0].content[0].text.value
     
-        #AI의 답변 
-    with st.chat_message("assistant"):
-        stream_handler = StreamingHandler(st.empty())
-        llm = ChatOpenAI(streaming=True, callbacks=[stream_handler])
-    #2번. 프롬프트생성
-
-        prompt = ChatPromptTemplate.from_messages(
-            [
-                (
-                    "system",
-                    "질문에 짧고 간결하게 답변해 주세요",
-                ),
-                # 대화 기록을 변수로 사용, history 가 MessageHistory 의 key 가 됨
-                MessagesPlaceholder(variable_name="history"),
-                ("human", "{question}"),  # 사용자 입력을 변수로 사용
-            ]
-        )
-        chain = prompt | llm
-        
-        chain_with_memory = RunnableWithMessageHistory(  # RunnableWithMessageHistory 객체 생성
-                chain,  # 실행할 Runnable 객체
-                get_session_history,  # 세션 기록을 가져오는 함수
-                input_messages_key="question",  # 사용자 질문의 키 
-                history_messages_key="history",  # 기록 메시지의 키
-            )
-
-
-        response = chain_with_memory.invoke(
-        {"question": user_input},
-        # 설정 정보로 세션 ID "abc123"을 전달합니다.
-        config={"configurable": {"session_id": session_id}},
-        )
-        st.session_state["messages"].append(ChatMessage(role="assistant", content=response.content))
-
-
-
-
-
-#데이터 베이스를 이용해서 사용할 수 있다. 
+    st.session_state.messages.append({"role": "assistant", "content": msg})
+    st.chat_message("assistant", avatar="🦄").write(msg)
