@@ -14,7 +14,7 @@ col1, col2 = st.columns(2)
 
 with col1:
     # 링크가 포함된 서브헤더와 이미지
-    st.markdown('### [1. 제안서 생성 보조도구](https://childlawcreator-qfu1xsx5rw.streamlit.app/%EB%A7%88%EC%9D%8CAI)')
+    st.markdown('### [1. 마음AI](https://childlawcreator-qfu1xsx5rw.streamlit.app/%EB%A7%88%EC%9D%8CAI)')
     st.write('이 도구를 사용하면, 제안서를 쉽고 빠르게 작성할 수 있습니다.')
     # 이미지에 하이퍼링크 추가
     st.markdown("""
@@ -25,19 +25,19 @@ with col1:
 
 
 with col2:
-    st.subheader('2. 발표문 생성 보조도구')
-    st.write('발표 준비에 도움이 필요하신가요? 이 도구가 도와드립니다.')
+    st.subheader('2. 마음AI보조도구')
+    st.write('마음AI보조도구')
 
 col3, col4 = st.columns(2)
 
 with col3:
-    st.subheader('3. 안건 제안 보조 챗봇 & 보조도구')
+    st.subheader('3. 생각AI')
     st.write('보조챗봇을 통해 법률안과 제안서에 대한 이해를 높일 수 있습니다. 챗봇과의 대화를 통해 아이디어를 만들어보세요.')
     st.write('보조도구를 통해 법률안을 만들 수 있습니다.')
 
 with col4:
-    st.subheader('4. 이미지 생성 보조도구')
-    st.write('텍스트 설명을 바탕으로 이미지를 생성합니다.')
+    st.subheader('4. 실천AI')
+    st.write('실천AI')
     st.markdown('**주의:** 이미지 생성요청이 한번에 몰릴 경우 이미지생성오류가 있을 수 있습니다.')
 
 # 추가적인 정보 제공
