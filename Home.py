@@ -12,7 +12,7 @@ st.markdown("""
 """)
 
 # 컬럼으로 레이아웃 구성
-col1 st.columns(2)
+col1 st.columns(1)
 
 with col1:
     st.subheader('1. 생각 톡톡 AI')
@@ -27,13 +27,13 @@ with col1:
     st.markdown(f'<a href="{link_url}" target="_blank"><img src="{image_path}" alt="도덕 교육 이미지" style="width:100%;"></a>', unsafe_allow_html=True)
 
 
-col3, col4 = st.columns(2)
+col2 = st.columns(1)
 
 with col2:
     st.subheader('2.마음톡톡 AI')
     st.write('도덕적 딜레마상황에 대해서 생각해 보고 어떤 선택기 옮은 것인지 생각해 볼 수 있습니다.')
    
-
+col3 = st.columns(1)
 with col3:
     st.subheader('3.실천톡톡 AI')
     st.write('텍스트 설명을 바탕으로 이미지를 생성합니다.')
