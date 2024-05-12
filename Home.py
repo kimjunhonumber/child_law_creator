@@ -32,8 +32,8 @@ col3, col4 = st.columns(2)
 
 with col3:
     st.subheader('3. 생각AI')
-    st.write('보조챗봇을 통해 법률안과 제안서에 대한 이해를 높일 수 있습니다. 챗봇과의 대화를 통해 아이디어를 만들어보세요.')
-    st.write('보조도구를 통해 법률안을 만들 수 있습니다.')
+    st.write('도덕과 관련된 딜레마상황을 판단할수 있습니다.')
+    st.write('보조도구를 이용해 보세요.')
 
 with col4:
     st.subheader('4. 실천AI')
