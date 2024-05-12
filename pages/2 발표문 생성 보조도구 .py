@@ -1,83 +1,98 @@
-import streamlit as st
 from openai import OpenAI
-from io import BytesIO
-import random
+from langchain_core.callbacks.base import BaseCallbackHandler
+from langchain_openai import ChatOpenAI
+import streamlit as st
+import time
+import os
 
-# secrets.toml에 저장된 API 키들을 리스트로 준비
-api_keys = [
-    st.secrets["api_key1"],
-    st.secrets["api_key2"],
-    st.secrets["api_key3"],
-    st.secrets["api_key4"],
-    st.secrets["api_key5"],
-    st.secrets["api_key6"]
-]
+# Define the StreamingHandler class before using it
+class StreamingHandler(BaseCallbackHandler):
+    def __init__(self, container, initial_text="", **kwargs) -> None:
+        self.container = container
+        self.text = initial_text
+   
+    def on_llm_new_token(self, token: str, **kwargs) -> None:
+        self.text += token
+        self.container.markdown(self.text)
 
-# 세션 상태에서 현재 API 키를 관리
-if 'api_key' not in st.session_state:
-    # API 키를 랜덤하게 선택하여 세션 상태에 저장
-    st.session_state.api_key = random.choice(api_keys)
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
-client = OpenAI(api_key=st.session_state.api_key)
+st.set_page_config(page_title="마음AI", page_icon="🧠")
+st.title("🧠생각AI")
+# Creating an instance of StreamingHandler
+stream_handler = StreamingHandler(container=st, initial_text="")
 
-st.set_page_config(layout="wide")
-    
-st.title("발표문 생성기")
+# Adding StreamingHandler to ChatOpenAI instance
+llm = ChatOpenAI(model="gpt-4-turbo", callbacks=[stream_handler])
 
-# 대상 선택
-st.header("청중 선택")
-audience = st.radio("청중을 선택하세요:", ('어린이', '청소년', '성인'))
+# Updated Assistant ID
+assistant_id = "asst_OCLRBXXLG5aioaFLvZI4wGeu"
 
-# 발표 시간 선택
-st.header("발표 시간 선택")
-presentation_time = st.selectbox("발표할 시간을 선택하세요:", ['5분', '10분', '15분', '20분'])
+with st.sidebar:
+    # Manage Thread ID
+    if "thread_id" not in st.session_state:
+        st.session_state.thread_id = ""
 
-# 제안서와 법률 입력 받기
-st.header("제안서 및 법률")
-proposal = st.text_area("제안서를 입력하세요 (50줄 내외):")
-law = st.text_area("법률 내용을 입력하세요 (50줄 내외):")
+    thread_btn = st.button("Thread 생성")
 
-st.divider()
+    if thread_btn:
+        thread = client.beta.threads.create()
+        st.session_state.thread_id = thread.id  # Save Thread ID in session_state
+        st.subheader(f"Created Thread ID: {st.session_state.thread_id}")
+        st.info("스레드가 생성되었습니다.")
+        st.info("스레드 ID를 기억하면 대화내용을 이어갈 수 있습니다.")
+        st.divider()
+        st.subheader("추천 질문")
+        st.info("도덕 덕목에 대해 설명해줘")
+        st.info("내가 가지고 있는 고민을 해결해줘")
+        st.info("어떤 선택이 좋은 선택일까?")
+        st.info("친구의 마음을 이해하는 방법은?")
 
-@st.cache_data
-def generate_speech(proposal, law, audience, presentation_time):
-    # 발표 시간에 따른 max_tokens 추정
-    time_to_tokens = {'5분': 600, '10분': 1200, '15분': 1800, '20분': 2400} # 추정값
+# Automatic update of the Thread ID field
+thread_id = st.text_input("Thread ID", value=st.session_state.thread_id)
 
-    prompt = f'''
-    청중({audience})을 위한 발표문을 생성해주세요. 발표문은 서론, 본론, 결론을 포함해야 하며, 각 부분은 명확하게 구분되어야 합니다. 발표문은 다음 제안서와 법률에 기반해야 합니다:
 
-    제안서: {proposal}
-    법률: {law}
-    
-    서론은 발표문의 주제를 소개하고, 청중의 관심을 끌어야 합니다. 본론은 제안서와 법률에 대한 상세한 분석과 논의를 제공해야 합니다. 결론은 발표문의 핵심 메시지를 요약하고, 청중에게 강한 인상을 남겨야 합니다.
-    '''
+if "messages" not in st.session_state:
+    st.session_state["messages"] = [{"role": "assistant", "content": "안녕하세요, 저는 마음AI 챗봇입니다. 먼저 왼쪽의 'Thread 생성'버튼을 눌러주세요. 무엇을 도와드릴까요?"}]
+for msg in st.session_state.messages:
+    st.chat_message("role", avatar="🐵").write(msg["content"])
 
-    # chat_completions.create 메소드를 사용한 호출로 변경
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "system", "content": prompt}],
-        max_tokens=time_to_tokens[presentation_time],
-        temperature=0.7,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0
+if prompt := st.chat_input():
+    if not thread_id:
+        st.error("Please add your thread_id to continue.")
+        st.stop()
+
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    st.chat_message("user", avatar="🐶").write(prompt)
+
+    response = client.beta.threads.messages.create(
+        thread_id,
+        role="user",
+        content=prompt,
     )
-    return response.choices[0].message.content
 
-# 발표문 생성 버튼
-if st.button("발표문 생성하기"):
-    speech = generate_speech(proposal, law, audience, presentation_time)
-    st.subheader("생성된 발표문")
-    st.write(speech)
-
-    # 발표문을 TXT 파일로 변환
-    txt_file = BytesIO(speech.encode('utf-8'))
-
-    # 다운로드 링크 제공
-    st.download_button(
-        label="발표문 다운로드하기",
-        data=txt_file,
-        file_name="generated_speech.txt",
-        mime="text/plain"
+    run = client.beta.threads.runs.create(
+        thread_id=thread_id,
+        assistant_id=assistant_id
     )
+
+
+    run_id = run.id
+
+    while True:
+        run = client.beta.threads.runs.retrieve(
+            thread_id=thread_id,
+            run_id=run_id
+        )
+        if run.status == "completed":
+            break
+        else:
+            time.sleep(2)
+
+    thread_messages = client.beta.threads.messages.list(thread_id)
+
+    msg = thread_messages.data[0].content[0].text.value
+    
+    st.session_state.messages.append({"role": "assistant", "content": msg})
+    st.chat_message("assistant", avatar="🐵").write(msg)
