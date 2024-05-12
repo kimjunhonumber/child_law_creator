@@ -1,23 +1,12 @@
 import streamlit as st
 from openai import OpenAI
 import random
+import os
 
-# secrets.toml에 저장된 API 키들을 리스트로 준비
-api_keys = [
-    st.secrets["api_key1"],
-    st.secrets["api_key2"],
-    st.secrets["api_key3"],
-    st.secrets["api_key4"],
-    st.secrets["api_key5"],
-    st.secrets["api_key6"]
-]
 
 # 세션 상태에서 현재 API 키를 관리
-if 'api_key' not in st.session_state:
-    # API 키를 랜덤하게 선택하여 세션 상태에 저장
-    st.session_state.api_key = random.choice(api_keys)
-
-client = OpenAI(api_key=st.session_state.api_key)
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
 # 페이지 레이아웃 설정
 st.set_page_config(layout="wide")
@@ -25,7 +14,7 @@ st.set_page_config(layout="wide")
 st.title("이미지 생성 보조 도구(2)")
 
 # 발표문 입력
-presentation_text = st.text_area("발표문을(전체 혹은 일부) 입력하세요.", height=300)
+presentation_text = st.text_area("도덕적 상황과(나의 상황) 관련된 이야기를 적어보세요..", height=300)
 
 # 이미지 스타일 선택
 image_style = st.selectbox("이미지 스타일 선택", ["사실적", "미니멀 일러스트레이션", "만화적"])
