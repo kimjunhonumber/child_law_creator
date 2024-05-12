@@ -11,7 +11,7 @@ st.markdown("""
 # 컬럼으로 레이아웃 구성
 col1, col2 =st.columns(2)
 with col1:
-    st.subheader('1. 마음AI)
+    st.subheader('1.마음AI)
     st.write('이 도구를 사용하면, 마음에 대해 알 수 있습니다.')
     Image_path = 'https://t1.daumcdn.net/thumb/R720x0/?fname=http://t1.daumcdn.net/brunch/service/user/xSO/image/LlSElL_exe7lc0mLeGSxBr4EZjg.png'  # 로컬 파일 경로 또는 URL
     st.image(image_path, caption='도덕 교육 이미지')  # 이미지에 설명 추가
