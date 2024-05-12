@@ -13,7 +13,7 @@ st.markdown("""
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader('1. 제안서 생성 보조도구')
+    st.markdown('### [1. 제안서 생성 보조도구](https://childlawcreator-qfu1xsx5rw.streamlit.app/%EB%A7%88%EC%9D%8CAI)')
     st.write('이 도구를 사용하면, 제안서를 쉽고 빠르게 작성할 수 있습니다.')
 
 with col2:
